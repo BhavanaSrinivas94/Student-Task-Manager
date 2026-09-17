@@ -272,3 +272,30 @@ body {
     border-radius: 6px;
     cursor: pointer;
 }
+/* Search and Filter */
+
+.task-controls {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+#searchInput {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+#searchInput:focus {
+    outline: none;
+}
+
+#filterSelect {
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+}

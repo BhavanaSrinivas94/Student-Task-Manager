@@ -12,18 +12,27 @@ const taskDueDate = document.getElementById("taskDueDate");
 
 const todoContainer = document.getElementById("todoContainer");
 
+const searchInput = document.getElementById("searchInput");
+const filterSelect = document.getElementById("filterSelect");
+
+
 // Hide form when page loads
 taskForm.style.display = "none";
 
-// Store tasks
-let todos = [];
+
+// Load tasks from LocalStorage
+let todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+
+// Save tasks to LocalStorage
+function saveTodos() {
+    localStorage.setItem("todos", JSON.stringify(todos));
+}
 
 
 // Show task form
 addTaskButton.addEventListener("click", function () {
-
     taskForm.style.display = "block";
-
 });
 
 
@@ -35,17 +44,13 @@ saveTaskButton.addEventListener("click", function () {
     const priority = taskPriority.value;
     const dueDate = taskDueDate.value;
 
-
     // Check title
     if (title === "") {
-
         alert("Please enter a task title.");
-
         return;
     }
 
-
-    // Create task object
+    // Create task
     const newTodo = {
 
         id: Date.now(),
@@ -59,13 +64,14 @@ saveTaskButton.addEventListener("click", function () {
         dueDate: dueDate,
 
         completed: false
-
     };
 
 
-    // Add task to array
+    // Add task
     todos.push(newTodo);
 
+    // Save task
+    saveTodos();
 
     // Display tasks
     renderTodos();
@@ -88,8 +94,31 @@ function renderTodos() {
 
     todoContainer.innerHTML = "";
 
+    const searchText = searchInput.value.toLowerCase();
 
-    todos.forEach(function (todo) {
+    const filter = filterSelect.value;
+
+
+    // Search + filter
+    const filteredTodos = todos.filter(function (todo) {
+
+        const matchesSearch =
+            todo.title.toLowerCase().includes(searchText);
+
+
+        const matchesFilter =
+            filter === "all" ||
+            (filter === "pending" && !todo.completed) ||
+            (filter === "completed" && todo.completed);
+
+
+        return matchesSearch && matchesFilter;
+
+    });
+
+
+    // Display filtered tasks
+    filteredTodos.forEach(function (todo) {
 
         const todoCard = document.createElement("div");
 
@@ -135,13 +164,23 @@ function renderTodos() {
 }
 
 
+// Search tasks
+searchInput.addEventListener("input", function () {
+    renderTodos();
+});
+
+
+// Filter tasks
+filterSelect.addEventListener("change", function () {
+    renderTodos();
+});
+
+
 // Complete task
 function completeTodo(id) {
 
     const todo = todos.find(function (todo) {
-
         return todo.id === id;
-
     });
 
 
@@ -149,6 +188,10 @@ function completeTodo(id) {
 
         todo.completed = !todo.completed;
 
+        // Save updated task
+        saveTodos();
+
+        // Display updated task
         renderTodos();
 
     }
@@ -160,12 +203,56 @@ function completeTodo(id) {
 function deleteTodo(id) {
 
     todos = todos.filter(function (todo) {
-
         return todo.id !== id;
-
     });
 
 
+    // Save updated list
+    saveTodos();
+
+    // Display updated list
     renderTodos();
 
 }
+
+
+// Load saved tasks when page opens
+renderTodos();
+
+
+// Browser notification permission
+function requestNotificationPermission() {
+
+    if ("Notification" in window) {
+
+        Notification.requestPermission();
+
+    }
+
+}
+
+requestNotificationPermission();
+
+
+// Test notification
+function sendTestNotification() {
+
+    if (
+        "Notification" in window &&
+        Notification.permission === "granted"
+    ) {
+
+        new Notification("Student Task Manager", {
+
+            body: "This is your task reminder!"
+
+        });
+
+    }
+
+}
+
+
+// Temporary notification test
+// Remove this line after testing
+sendTestNotification();
