@@ -109,6 +109,12 @@
         type="date"
         id="taskDueDate"
     >
+    <select id="taskProject">
+
+    <option value="">No Project</option>
+
+</select>
+    >
 
     <button id="saveTaskButton">
         Add Task
@@ -136,7 +142,49 @@
                 </div>
 
             </section>
+             <!-- Projects Section -->
+<section class="projects-section">
 
+    <div class="section-header">
+
+        <h2>My Projects</h2>
+
+        <button id="addProjectButton">
+            + Add Project
+        </button>
+
+    </div>
+
+
+    <!-- Project Form -->
+    <div id="projectForm" class="project-form">
+
+        <h3>Add New Project</h3>
+
+        <input
+            type="text"
+            id="projectName"
+            placeholder="Enter project name"
+        >
+
+        <textarea
+            id="projectDescription"
+            placeholder="Enter project description"
+        ></textarea>
+
+        <button id="saveProjectButton">
+            Add Project
+        </button>
+
+    </div>
+
+
+    <!-- Projects will appear here -->
+    <div id="projectContainer" class="project-container">
+
+    </div>
+
+    </section>
         </main>
 
     </div>

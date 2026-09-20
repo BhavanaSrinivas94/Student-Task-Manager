@@ -14,21 +14,133 @@ const todoContainer = document.getElementById("todoContainer");
 
 const searchInput = document.getElementById("searchInput");
 const filterSelect = document.getElementById("filterSelect");
+const totalTasks = document.getElementById("totalTasks");
+const completedTasks = document.getElementById("completedTasks");
+const pendingTasks = document.getElementById("pendingTasks");
+const addProjectButton = document.getElementById("addProjectButton");
 
+const projectForm = document.getElementById("projectForm");
+
+const saveProjectButton = document.getElementById("saveProjectButton");
+
+const projectName = document.getElementById("projectName");
+
+const projectDescription = document.getElementById("projectDescription");
+
+const projectContainer = document.getElementById("projectContainer");
+const taskProject = document.getElementById("taskProject");
 
 // Hide form when page loads
 taskForm.style.display = "none";
-
+projectForm.style.display = "none";
 
 // Load tasks from LocalStorage
 let todos = JSON.parse(localStorage.getItem("todos")) || [];
+let projects = JSON.parse(localStorage.getItem("projects")) || [];
 
+addProjectButton.addEventListener("click", function () {
+
+    projectForm.style.display = "block";
+
+});
+function saveProjects() {
+
+    localStorage.setItem(
+        "projects",
+        JSON.stringify(projects)
+    );
+
+}
+
+saveProjectButton.addEventListener("click", function () {
+
+    const name = projectName.value.trim();
+
+    const description = projectDescription.value.trim();
+
+
+    if (name === "") {
+
+        alert("Please enter a project name.");
+
+        return;
+
+    }
+
+
+    const newProject = {
+
+        id: Date.now(),
+
+        name: name,
+
+        description: description
+
+    };
+
+
+    projects.push(newProject);
+
+    saveProjects();
+
+    renderProjects();
+
+
+    projectName.value = "";
+
+    projectDescription.value = "";
+
+
+    alert("Project added successfully!");
+
+});
+function renderProjects() {
+
+    projectContainer.innerHTML = "";
+
+
+    projects.forEach(function (project) {
+
+        const projectCard = document.createElement("div");
+
+        projectCard.className = "project-card";
+
+
+        projectCard.innerHTML = `
+
+            <h3>${project.name}</h3>
+
+            <p>
+                ${project.description || "No description"}
+            </p>
+
+        `;
+
+
+        projectContainer.appendChild(projectCard);
+
+    });
+
+}
 
 // Save tasks to LocalStorage
 function saveTodos() {
     localStorage.setItem("todos", JSON.stringify(todos));
 }
+function updateStatistics() {
 
+    const total = todos.length;
+
+    const completed = todos.filter(function (todo) {
+        return todo.completed;
+    }).length;
+
+    const pending = total - completed;
+
+    totalTasks.textContent = total;
+    completedTasks.textContent = completed;
+    pendingTasks.textContent = pending;
+}
 
 // Show task form
 addTaskButton.addEventListener("click", function () {
@@ -91,6 +203,7 @@ saveTaskButton.addEventListener("click", function () {
 
 // Display tasks
 function renderTodos() {
+    updateStatistics();
 
     todoContainer.innerHTML = "";
 
@@ -218,7 +331,7 @@ function deleteTodo(id) {
 
 // Load saved tasks when page opens
 renderTodos();
-
+renderProjects();
 
 // Browser notification permission
 function requestNotificationPermission() {
@@ -251,8 +364,3 @@ function sendTestNotification() {
     }
 
 }
-
-
-// Temporary notification test
-// Remove this line after testing
-sendTestNotification();
