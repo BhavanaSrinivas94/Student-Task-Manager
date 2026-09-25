@@ -22,6 +22,8 @@ public class Task {
 
     private boolean completed;
 
+    private String projectId;
+
     public Task() {
     }
 
@@ -68,4 +70,11 @@ public class Task {
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
+    public String getProjectId() {
+    return projectId;
+}
+
+public void setProjectId(String projectId) {
+    this.projectId = projectId;
+}
 }
