@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
 import {
-    getTasks,
-    createTask,
-    updateTask,
-    deleteTask as deleteTaskApi
+  getTasks,
+  createTask,
+  updateTask,
+  deleteTask as deleteTaskApi
 } from "./api/taskApi";
 
 import Header from "./Components/Header";
@@ -29,18 +29,28 @@ function App() {
   const [activePage, setActivePage] =
     useState("dashboard");
 
+
   // Load tasks from Spring Boot
   useEffect(function () {
 
     getTasks()
       .then(function (data) {
+
+        console.log("TASKS LOADED FROM BACKEND:", data);
+
         setTasks(data);
       })
       .catch(function (error) {
-        console.error("Error loading tasks:", error);
+
+        console.error(
+          "ERROR LOADING TASKS:",
+          error
+        );
+
       });
 
   }, []);
+
 
   // Save projects locally for now
   useEffect(function () {
@@ -53,22 +63,43 @@ function App() {
   }, [projects]);
 
 
-  // Add task to MySQL through Spring Boot
+  // Add task
   async function addTask(task) {
+
+    console.log(
+      "TASK RECEIVED BY APP:",
+      task
+    );
 
     try {
 
-      const savedTask = await createTask(task);
+      const savedTask =
+        await createTask(task);
+
+      console.log(
+        "TASK SAVED BY BACKEND:",
+        savedTask
+      );
 
       setTasks(function (currentTasks) {
-        return [...currentTasks, savedTask];
+
+        return [
+          ...currentTasks,
+          savedTask
+        ];
+
       });
 
     } catch (error) {
 
-      console.error("Error creating task:", error);
+      console.error(
+        "ERROR CREATING TASK:",
+        error
+      );
 
-      alert("Could not create task.");
+      alert(
+        "Could not create task."
+      );
 
     }
   }
@@ -93,7 +124,10 @@ function App() {
     try {
 
       const savedTask =
-        await updateTask(id, updatedTask);
+        await updateTask(
+          id,
+          updatedTask
+        );
 
       setTasks(function (currentTasks) {
 
@@ -111,15 +145,20 @@ function App() {
 
     } catch (error) {
 
-      console.error("Error updating task:", error);
+      console.error(
+        "ERROR UPDATING TASK:",
+        error
+      );
 
-      alert("Could not update task.");
+      alert(
+        "Could not update task."
+      );
 
     }
   }
 
 
-  // Delete task from MySQL
+  // Delete task
   async function deleteTask(id) {
 
     try {
@@ -128,17 +167,24 @@ function App() {
 
       setTasks(function (currentTasks) {
 
-        return currentTasks.filter(function (task) {
-          return task.id !== id;
-        });
+        return currentTasks.filter(
+          function (task) {
+            return task.id !== id;
+          }
+        );
 
       });
 
     } catch (error) {
 
-      console.error("Error deleting task:", error);
+      console.error(
+        "ERROR DELETING TASK:",
+        error
+      );
 
-      alert("Could not delete task.");
+      alert(
+        "Could not delete task."
+      );
 
     }
   }

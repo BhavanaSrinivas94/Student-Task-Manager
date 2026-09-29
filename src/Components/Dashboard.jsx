@@ -1,20 +1,13 @@
 import Statistics from "./Statistics";
 import TaskForm from "./TaskForm";
 
-function Dashboard({ tasks, setTasks, projects }) {
-
-  function addTask(task) {
-    setTasks(function (currentTasks) {
-      return [...currentTasks, task];
-    });
-  }
+function Dashboard({ tasks, onAddTask, projects }) {
 
   const completedTasks = tasks.filter(function (task) {
     return task.completed;
   }).length;
 
-  const pendingTasks =
-    tasks.length - completedTasks;
+  const pendingTasks = tasks.length - completedTasks;
 
   return (
     <main className="main">
@@ -32,7 +25,7 @@ function Dashboard({ tasks, setTasks, projects }) {
       />
 
       <TaskForm
-        onAddTask={addTask}
+        onAddTask={onAddTask}
         projects={projects}
       />
 

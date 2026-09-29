@@ -16,14 +16,13 @@ function TaskForm({ onAddTask, projects }) {
     }
 
     const newTask = {
-      id: Date.now(),
-      title: title,
-      description: description,
-      priority: priority,
-      dueDate: dueDate,
-      projectId: projectId,
-      completed: false
-    };
+    title: title,
+    description: description,
+    priority: priority,
+    dueDate: dueDate,
+    projectId: projectId,
+    completed: false
+};
 
     onAddTask(newTask);
 
