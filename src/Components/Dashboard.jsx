@@ -1,3 +1,4 @@
+
 import Statistics from "./Statistics";
 import TaskForm from "./TaskForm";
 
@@ -11,12 +12,8 @@ function Dashboard({ tasks, onAddTask, projects }) {
 
   return (
     <main className="main">
-
       <h2>Dashboard</h2>
-
-      <p>
-        Welcome! Manage your study tasks from here.
-      </p>
+      <p>Welcome! Manage your study tasks from here.</p>
 
       <Statistics
         total={tasks.length}
@@ -28,7 +25,6 @@ function Dashboard({ tasks, onAddTask, projects }) {
         onAddTask={onAddTask}
         projects={projects}
       />
-
     </main>
   );
 }
