@@ -28,3 +28,11 @@ target/
 
 ### VS Code ###
 .vscode/
+# Node.js and React
+node_modules/
+dist/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
