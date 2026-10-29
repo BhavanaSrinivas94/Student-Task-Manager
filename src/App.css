@@ -182,3 +182,20 @@
     border-right-color: var(--border);
   }
 }
+
+/* Task deadline indicators */
+
+.deadline-overdue {
+  color: #dc2626;
+  font-weight: bold;
+}
+
+.deadline-today {
+  color: #ea580c;
+  font-weight: bold;
+}
+
+.deadline-upcoming {
+  color: #ca8a04;
+  font-weight: bold;
+}
