@@ -15,35 +15,53 @@ import Projects from "./Components/Projects";
 
 function App() {
 
+  // =========================
+  // TASKS FROM BACKEND
+  // =========================
+
   const [tasks, setTasks] = useState([]);
 
+  // =========================
+  // PROJECTS
+  // =========================
+
   const [projects, setProjects] = useState(function () {
+
     const savedProjects =
       localStorage.getItem("reactProjects");
 
     return savedProjects
       ? JSON.parse(savedProjects)
       : [];
+
   });
+
+  // =========================
+  // CURRENT PAGE
+  // =========================
 
   const [activePage, setActivePage] =
     useState("dashboard");
 
 
-  // Load tasks from Spring Boot
+  // =========================
+  // LOAD TASKS FROM SPRING BOOT
+  // =========================
+
   useEffect(function () {
 
     getTasks()
       .then(function (data) {
 
-        console.log("TASKS LOADED FROM BACKEND:", data);
+        console.log("Tasks received from backend:", data);
 
         setTasks(data);
+
       })
       .catch(function (error) {
 
         console.error(
-          "ERROR LOADING TASKS:",
+          "Error loading tasks:",
           error
         );
 
@@ -52,7 +70,10 @@ function App() {
   }, []);
 
 
-  // Save projects locally for now
+  // =========================
+  // SAVE PROJECTS LOCALLY
+  // =========================
+
   useEffect(function () {
 
     localStorage.setItem(
@@ -63,23 +84,20 @@ function App() {
   }, [projects]);
 
 
-  // Add task
-  async function addTask(task) {
+  // =========================
+  // ADD TASK
+  // =========================
 
-    console.log(
-      "TASK RECEIVED BY APP:",
-      task
-    );
+  async function addTask(task) {
 
     try {
 
-      const savedTask =
-        await createTask(task);
+      // FIX: remove the id created by the form (Date.now()).
+      // The Spring Boot backend generates the real id itself.
+      const { id, ...taskWithoutId } = task;
 
-      console.log(
-        "TASK SAVED BY BACKEND:",
-        savedTask
-      );
+      const savedTask =
+        await createTask(taskWithoutId);
 
       setTasks(function (currentTasks) {
 
@@ -93,32 +111,41 @@ function App() {
     } catch (error) {
 
       console.error(
-        "ERROR CREATING TASK:",
+        "Error creating task:",
         error
       );
 
-      alert(
-        "Could not create task."
-      );
+      alert("Could not create task.");
 
     }
+
   }
 
 
-  // Complete or undo task
+  // =========================
+  // COMPLETE / UNDO TASK
+  // =========================
+
   async function completeTask(id) {
 
     const task = tasks.find(function (task) {
+
       return task.id === id;
+
     });
 
     if (!task) {
+
       return;
+
     }
 
     const updatedTask = {
+
       ...task,
+
       completed: !task.completed
+
     };
 
     try {
@@ -134,7 +161,9 @@ function App() {
         return currentTasks.map(function (task) {
 
           if (task.id === id) {
+
             return savedTask;
+
           }
 
           return task;
@@ -146,19 +175,21 @@ function App() {
     } catch (error) {
 
       console.error(
-        "ERROR UPDATING TASK:",
+        "Error updating task:",
         error
       );
 
-      alert(
-        "Could not update task."
-      );
+      alert("Could not update task.");
 
     }
+
   }
 
 
-  // Delete task
+  // =========================
+  // DELETE TASK
+  // =========================
+
   async function deleteTask(id) {
 
     try {
@@ -167,30 +198,34 @@ function App() {
 
       setTasks(function (currentTasks) {
 
-        return currentTasks.filter(
-          function (task) {
-            return task.id !== id;
-          }
-        );
+        return currentTasks.filter(function (task) {
+
+          return task.id !== id;
+
+        });
 
       });
 
     } catch (error) {
 
       console.error(
-        "ERROR DELETING TASK:",
+        "Error deleting task:",
         error
       );
 
-      alert(
-        "Could not delete task."
-      );
+      alert("Could not delete task.");
 
     }
+
   }
 
 
+  // =========================
+  // UI
+  // =========================
+
   return (
+
     <div>
 
       <Header />
@@ -198,6 +233,7 @@ function App() {
       <Sidebar
         onNavigate={setActivePage}
       />
+
 
       {activePage === "dashboard" && (
 
@@ -208,6 +244,7 @@ function App() {
         />
 
       )}
+
 
       {activePage === "tasks" && (
 
@@ -220,6 +257,7 @@ function App() {
 
       )}
 
+
       {activePage === "projects" && (
 
         <Projects
@@ -230,6 +268,7 @@ function App() {
         />
 
       )}
+
 
       {activePage === "settings" && (
 
@@ -246,7 +285,9 @@ function App() {
       )}
 
     </div>
+
   );
+
 }
 
 export default App;
