@@ -1,3 +1,4 @@
+
 package com.studenttaskmanager.backend.controller;
 
 import com.studenttaskmanager.backend.model.User;
@@ -6,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -34,5 +36,25 @@ public class AuthController {
         userRepository.save(user);
 
         return Map.of("message", "Registration successful");
+    }
+
+    @PostMapping("/login")
+    public Map<String, String> login(@RequestBody User loginUser) {
+
+        Optional<User> userOptional =
+                userRepository.findByEmail(loginUser.getEmail());
+
+        if (userOptional.isEmpty()) {
+            return Map.of("message", "Invalid email or password");
+        }
+
+        User user = userOptional.get();
+
+        if (!passwordEncoder.matches(
+                loginUser.getPassword(), user.getPassword())) {
+            return Map.of("message", "Invalid email or password");
+        }
+
+        return Map.of("message", "Login successful");
     }
 }
